@@ -1,0 +1,6 @@
+[submodule "proxies/su3_bench"]
+	path = proxies/su3_bench
+	url = https://gitlab.com/NERSC/nersc-proxies/su3_bench
+[submodule "benchmarks/performance/cs-roofline-toolkit"]
+	path = benchmarks/performance/cs-roofline-toolkit
+	url = https://bitbucket.org/berkeleylab/cs-roofline-toolkit.git
