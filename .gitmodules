@@ -4,3 +4,15 @@
 [submodule "benchmarks/performance/cs-roofline-toolkit"]
 	path = benchmarks/performance/cs-roofline-toolkit
 	url = https://bitbucket.org/berkeleylab/cs-roofline-toolkit.git
+[submodule "benchmarks/performance/rocHPCG"]
+	path = benchmarks/performance/rocHPCG
+	url = https://github.com/ROCmSoftwarePlatform/rocHPCG
+[submodule "proxies/miniWeather"]
+	path = proxies/miniWeather
+	url = https://github.com/mrnorman/miniWeather.git
+[submodule "proxies/KokkosDslash"]
+	path = proxies/KokkosDslash
+	url = https://github.com/bjoo/KokkosDslash.git
+[submodule "HIP-Examples"]
+	path = HIP-Examples
+	url = https://github.com/ROCm-Developer-Tools/HIP-Examples.git
