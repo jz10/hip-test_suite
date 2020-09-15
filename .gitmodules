@@ -16,3 +16,6 @@
 [submodule "HIP-Examples"]
 	path = HIP-Examples
 	url = https://github.com/ROCm-Developer-Tools/HIP-Examples.git
+[submodule "benchmarks/performance/BabelStream"]
+	path = benchmarks/performance/BabelStream
+	url = https://github.com/UoB-HPC/BabelStream.git
