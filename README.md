@@ -26,10 +26,7 @@ The directory structure looks like:
 Since we use submodules, to clone all the submodules, you'll need to use 
 
 ```
-git clone --recurse-submodules https://github.com/jz10/hip-test_suite
-```
-Or
-```
 git clone https://github.com/jz10/hip-test_suite
-git submodule update --init --recursive https://github.com/jz10/hip-test_suite
+cd hip-test_suite
+git submodule update --init --recursive
 ```
