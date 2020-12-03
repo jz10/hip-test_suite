@@ -19,3 +19,6 @@
 [submodule "benchmarks/performance/BabelStream"]
 	path = benchmarks/performance/BabelStream
 	url = https://github.com/UoB-HPC/BabelStream.git
+[submodule "applications/cholla"]
+	path = applications/cholla
+	url = https://github.com/cholla-hydro/cholla.git
