@@ -1,7 +1,7 @@
 #!/bin/bash
 
 module load intel_compute_runtime
-module load hipcl
+module load hipcl/master-202010107
 
 cp ERT_configs/config.*-fp*.iris.jlse.anl.gov.01 cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0/Config
 cd cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0
