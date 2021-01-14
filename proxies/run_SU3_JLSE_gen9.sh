@@ -1,5 +1,6 @@
 #!/bin/bash
 
+module load intel_compute_runtime
 module load hipcl
 
 cd su3_bench
