@@ -72,3 +72,17 @@ $ ./run_tests.sh
 
 This just executes all the tests in the subdirectories matching `run_*JLSE_gen9*`, 
 and prints output to stdout.
+
+# Adding another repo as a submodule
+
+```
+$ git submodule add https://github.com/chaconinc/DbConnector
+$ git commit -am 'Add DbConnector module'
+```
+
+# Removing a submodule
+
+```
+$ git rm the_submodule
+$ rm -rf .git/modules/the_submodule
+```
