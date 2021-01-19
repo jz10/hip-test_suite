@@ -10,7 +10,9 @@ cd BabelStream
 
 rm ./hip-stream
 # HIPCL
-clang++ -O3 -std=c++11 -DHIP main.cpp HIPStream.cpp  -lhipcl -lOpenCL -o hip-stream
+sed s/"#define TBSIZE 1024"/"#define TBSIZE 256"/ HIPStream.cpp > HIPStream_gen9.cpp
+sed -i s/"#define DOT_NUM_BLOCKS 256"/"#define DOT_NUM_BLOCKS 32"/ HIPStream_gen9.cpp
+clang++ -O3 -std=c++11 -DHIP main.cpp HIPStream_gen9.cpp  -lhipcl -lOpenCL -o hip-stream
 
 # if what we should be measuring is the DRAM BW, then we should use 128MB as
 # the cache (eDRAM). in that case, the calculation is:
