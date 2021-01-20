@@ -11,12 +11,13 @@ python ./ert --verbose=3 Config/config.hip-fp64.iris.jlse.anl.gov.01
 python ./ert --verbose=3 Config/config.hip-fp32.iris.jlse.anl.gov.01 
 
 
-module purge
-module load intel_compute_runtime
-
 # OCL
-python ./ert --verbose=3 Config/config.ocl-fp64.iris.jlse.anl.gov.01 
-python ./ert --verbose=3 Config/config.ocl-fp32.iris.jlse.anl.gov.01 
+#module purge
+#module load intel_compute_runtime
+
+
+#python ./ert --verbose=3 Config/config.ocl-fp64.iris.jlse.anl.gov.01 
+#python ./ert --verbose=3 Config/config.ocl-fp32.iris.jlse.anl.gov.01 
 
 
 
