@@ -22,8 +22,8 @@ clang++ -O3 -std=c++11 -DHIP main.cpp HIPStream_gen9.cpp  -lhipcl -lOpenCL -o hi
 ./hip-stream -s 65536000
 
 # opencl
-module purge
-module load intel_compute_runtime
-make -f OpenCL.make clean
-make -f OpenCL.make
-./ocl-stream -s 65536000
+#module purge
+#module load intel_compute_runtime
+#make -f OpenCL.make clean
+#make -f OpenCL.make
+#./ocl-stream -s 65536000
