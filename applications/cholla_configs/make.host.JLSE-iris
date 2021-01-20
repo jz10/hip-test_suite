@@ -1,0 +1,18 @@
+#-- make.inc for Poplar, COE cluster at HPE
+
+#-- Compiler and flags for different build type
+#CC                = mpiicc -cc=clang++
+#CXX               = mpiicpc -cxx=clang++
+#HIP_PLATFORM      = hcc
+CFLAGS_DEBUG      = -g -O0
+CFLAGS_OPTIMIZE   = -Ofast
+CXXFLAGS_DEBUG    = -g -O0 -std=c++14
+CXXFLAGS_OPTIMIZE = -Ofast -std=c++14
+
+#-- How to launch job
+JOB_LAUNCH        = mpirun -n 1
+
+#-- Library
+HDF5_ROOT    = /home/bertoni/opt/hdf5
+MPI_ROOT     = /soft/compilers/intel-2019/impi/2019.4.243/intel64/
+ROCM_PATH    = /opt/rocm

@@ -7,7 +7,7 @@ do
     script_name=$(basename ${test_script})
     directory=$(dirname ${test_script})
     cd ${directory}
-    ./${script_name}
+    timeout -k 9 1200 ./${script_name}
     cd -
 
 done
