@@ -22,9 +22,6 @@
 [submodule "applications/cholla"]
 	path = applications/cholla
 	url = https://github.com/cholla-hydro/cholla.git
-[submodule "proxies/BerkeleyGW-Kernels-CPP"]
-	path = proxies/BerkeleyGW-Kernels-CPP
-	url = https://gitlab.com/NERSC/nersc-proxies/BerkeleyGW-Kernels-CPP.git
 [submodule "frameworks/kokkos"]
 	path = frameworks/kokkos
 	url = https://github.com/kokkos/kokkos.git
