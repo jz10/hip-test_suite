@@ -5,22 +5,27 @@ Right now the test set is composed of four high-level directories as git submodu
 - HIP-Examples (official HIP examples)
 - applications (full applications using HIP)
 - benchmarks (conformance and performance benchmarks)
+- frameworks (programming portability layers like Kokkos and RAJA)
 - proxies (proxy applications)
 
 The directory structure looks like:
 ```
-.
 ├── HIP-Examples
 ├── applications
+│   ├── cholla
 ├── benchmarks
-│   └── performance
-│       ├── BabelStream
-│       ├── cs-roofline-toolkit
-│       └── rocHPCG
-└── proxies
-    ├── KokkosDslash
-    ├── miniWeather
-    └── su3_bench
+│   └── performance
+│       ├── BabelStream
+│       ├── cs-roofline-toolkit
+│       ├── rocHPCG
+├── frameworks
+│   ├── RAJA
+│   ├── kokkos
+├── proxies
+│   ├── BerkeleyGW-Kernels-CPP
+│   ├── KokkosDslash
+│   ├── miniWeather
+│   └── su3_bench
 ```
 
 Since we use submodules, to clone all the submodules, you'll need to use 
