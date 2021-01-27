@@ -10,4 +10,4 @@ cd ../HIP-Examples/
 
 cd cuda-stream
 clang++ -std=c++11 -O3 -o stream stream.cpp -lOpenCL -lhipcl
-timing_check "./stream" "$0"
+timing_check "./stream -n 134217728" "$0"
