@@ -1,10 +1,13 @@
 #!/bin/bash
 
+# get the definition of timing_check
+source timing_check.sh
+
 module load intel_compute_runtime
 module load hipcl
 module load cmake
 
-cd RAJA
+cd ../frameworks/RAJA
 
 cd blt
 git reset --hard
