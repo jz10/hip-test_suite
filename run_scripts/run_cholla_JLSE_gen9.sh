@@ -1,5 +1,8 @@
 #!/bin/bash +e
 
+# get the definition of timing_check
+source timing_check.sh
+
 #module load openmpi/2.1.6-gcc
 module load mpi
 module load intel_compute_runtime
@@ -9,9 +12,10 @@ module load hipcl
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/bertoni/opt/hdf5/lib/
 #export CPATH=/opt/rocm/include:/opt/rocm/hip/include/:/home/bertoni/opt/hdf5/include/:/soft/libraries/mpi/openmpi/2.1.6/include/
 
+cd ../applications/cholla
 cp cholla_configs/make.host.JLSE-iris cholla/builds/
-cd cholla
 git checkout CAAR
+git reset --hard
 
 #module list
 export LIBRARY_PATH=$LIBRARY_PATH:/home/bertoni/opt/hdf5/lib/
@@ -40,7 +44,10 @@ then
     rm -rf test
     mkdir test
     cd test
-    mpirun -np 1 ../cholla.hydro-amd-ompi ../tests/3D/sod.txt
+    timing_check "mpirun -np 1 ../cholla.hydro-amd-ompi ../tests/3D/sod.txt" "$0"
+#    time (mpirun -np 1 ../cholla.hydro-amd-ompi ../tests/3D/sod.txt) 2> out
+#    runtime=$(grep 'real' out | grep "s$" | awk '{print $2}')
+#    echo "runtime for $0 is" $runtime
     cd ..
 else
     echo "Build failed"

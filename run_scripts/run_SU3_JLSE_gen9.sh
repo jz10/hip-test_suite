@@ -1,14 +1,17 @@
 #!/bin/bash
 
+# get the definition of timing_check
+source timing_check.sh
+
 module load intel_compute_runtime
 module load hipcl
 
-cd su3_bench
+cd ../proxies/su3_bench
 
 # HIP
 #hipcc -DMILC_COMPLEX --std c++14  -DUSE_HIP -DPRECISION=1 -o bench_f32_hip.exe su3_nn_bench.cpp 
 clang++ -DMILC_COMPLEX --std c++14  -DUSE_HIP -DPRECISION=1 -o bench_f32_hip.exe su3_nn_bench.cpp -lhipcl -lOpenCL
 # not using Makefile.hip since nvcc (under HIP) doens't like `-Wno-deprecated-register`
-./bench_f32_hip.exe -i 1000
+timing_check "./bench_f32_hip.exe -i 1000" "$0"
 
 

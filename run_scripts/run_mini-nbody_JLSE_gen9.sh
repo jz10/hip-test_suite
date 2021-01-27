@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# get the definition of timing_check
+source timing_check.sh
+
 module load intel_compute_runtime
 module load hipcl
 
@@ -14,7 +17,7 @@ K=1024
 for i in {1..10}
 do
     echo ./$EXE $K
-    ./$EXE $K
+    timing_check "./$EXE $K" "$0"
     K=$(($K*2))
 done
 
@@ -26,7 +29,7 @@ K=1024
 for i in {1..8}
 do
     echo ./$EXE $K
-    ./$EXE $K
+    timing_check "./$EXE $K" "$0"
     K=$(($K*2))
 done
 
@@ -38,7 +41,7 @@ K=1024
 for i in {1..8}
 do
     echo ./$EXE $K
-    ./$EXE $K
+    timing_check "./$EXE $K" "$0"
     K=$(($K*2))
 done
 

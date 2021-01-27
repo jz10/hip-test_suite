@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#module load hipcl/9.0
+# get the definition of timing_check
+source timing_check.sh
 
 module load intel_compute_runtime
-#module load pocl
 module load hipcl
 
-cd BabelStream
+cd ../benchmarks/performance/BabelStream
 
 rm ./hip-stream
 # HIPCL
@@ -19,7 +19,7 @@ clang++ -O3 -std=c++11 -DHIP main.cpp HIPStream_gen9.cpp  -lhipcl -lOpenCL -o hi
 # so for doubles, the size of the array is
 # 128000 kiB * 1024 bytes/KiB * 1 double / 8 bytes * 4 (factor for STREAM)
 # = 65536000
-./hip-stream -s 65536000
+timing_check "./hip-stream -s 65536000" "$0"
 
 # opencl
 #module purge
