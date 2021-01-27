@@ -8,7 +8,7 @@ cd RAJA
 
 cd blt
 git reset --hard
-git apply ../../RAJA_config/blt_patch
+git apply ../../patches/blt_patch
 cd ..
 
 rm -rf build

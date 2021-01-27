@@ -7,7 +7,7 @@ module load cmake
 cd kokkos
 
 git reset --hard
-git apply  ../kokkos_config/kokkos_patch
+git apply  ../patches/kokkos_patch
 
 rm -rf build
 mkdir build
