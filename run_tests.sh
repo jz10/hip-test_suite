@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # in case you forget like me :)
 git submodule update --init --recursive

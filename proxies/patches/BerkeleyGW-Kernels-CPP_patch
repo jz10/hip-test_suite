@@ -1,0 +1,13 @@
+diff --git a/ComplexClass/CustomComplex.h b/ComplexClass/CustomComplex.h
+index c463caf..f4ede45 100644
+--- a/ComplexClass/CustomComplex.h
++++ b/ComplexClass/CustomComplex.h
+@@ -44,7 +44,7 @@ C++ class for complex number arithemetic.
+ */
+ #ifndef __CustomComplex
+ #define __CustomComplex
+-
++#include <hip/hip_runtime.h>
+ #include <chrono>
+ #include <cmath>
+ #include <iostream>

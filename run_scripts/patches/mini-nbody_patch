@@ -1,0 +1,399 @@
+diff --git a/mini-nbody/hip/nbody-block.cpp b/mini-nbody/hip/nbody-block.cpp
+index a1cde4d..527188f 100644
+--- a/mini-nbody/hip/nbody-block.cpp
++++ b/mini-nbody/hip/nbody-block.cpp
+@@ -5,35 +5,53 @@
+ #include "timer.h"
+ 
+ #define BLOCK_SIZE 256
+-#define SOFTENING 1e-9f
++#define SOFTENING 1e-9
+ 
+-typedef struct { float4 *pos, *vel; } BodySystem;
++typedef struct { double4 *pos, *vel; } BodySystem;
+ 
+-void randomizeBodies(float *data, int n) {
++void randomizeBodies(double *data, int n) {
+   for (int i = 0; i < n; i++) {
+-    data[i] = 2.0f * (rand() / (float)RAND_MAX) - 1.0f;
++    data[i] = 2.0 * (rand() / (double)RAND_MAX) - 1.0;
++  }
++}
++
++void bodyForce_cpu(double4 *p, double4 *v, double dt, int n) {
++  for (int i = 0; i < n; i++) { 
++    double Fx = 0.0; double Fy = 0.0; double Fz = 0.0;
++
++    for (int j = 0; j < n; j++) {
++      double dx = p[j].x - p[i].x;
++      double dy = p[j].y - p[i].y;
++      double dz = p[j].z - p[i].z;
++      double distSqr = dx*dx + dy*dy + dz*dz + SOFTENING;
++      double invDist = (double) 1.0 / (double)sqrt(distSqr);
++      double invDist3 = invDist * invDist * invDist;
++
++      Fx += dx * invDist3; Fy += dy * invDist3; Fz += dz * invDist3;
++    }
++    v[i].x += dt*Fx; v[i].y += dt*Fy; v[i].z += dt*Fz;
+   }
+ }
+ 
+ __global__
+-void bodyForce(float4 *p, float4 *v, float dt, int n) {
++void bodyForce(double4 *p, double4 *v, double dt, int n) {
+   int i = hipBlockDim_x * hipBlockIdx_x + hipThreadIdx_x;
+   if (i < n) {
+-    float Fx = 0.0f; float Fy = 0.0f; float Fz = 0.0f;
++    double Fx = 0.0; double Fy = 0.0; double Fz = 0.0;
+ 
+     for (int tile = 0; tile < hipGridDim_x; tile++) {
+-      __shared__ float3 spos[BLOCK_SIZE];
+-      float4 tpos = p[tile * hipBlockDim_x + hipThreadIdx_x];
+-      spos[hipThreadIdx_x] = make_float3(tpos.x, tpos.y, tpos.z);
++      __shared__ double3 spos[BLOCK_SIZE];
++      double4 tpos = p[tile * hipBlockDim_x + hipThreadIdx_x];
++      spos[hipThreadIdx_x] = make_double3(tpos.x, tpos.y, tpos.z);
+       __syncthreads();
+ 
+       for (int j = 0; j < BLOCK_SIZE; j++) {
+-        float dx = spos[j].x - p[i].x;
+-        float dy = spos[j].y - p[i].y;
+-        float dz = spos[j].z - p[i].z;
+-        float distSqr = dx*dx + dy*dy + dz*dz + SOFTENING;
+-        float invDist = 1.0f / sqrtf(distSqr);
+-        float invDist3 = invDist * invDist * invDist;
++        double dx = spos[j].x - p[i].x;
++        double dy = spos[j].y - p[i].y;
++        double dz = spos[j].z - p[i].z;
++        double distSqr = dx*dx + dy*dy + dz*dz + SOFTENING;
++        double invDist = 1.0 / sqrt(distSqr);
++        double invDist3 = invDist * invDist * invDist;
+ 
+         Fx += dx * invDist3; Fy += dy * invDist3; Fz += dz * invDist3;
+       }
+@@ -49,18 +67,23 @@ int main(const int argc, const char** argv) {
+   int nBodies = 30000;
+   if (argc > 1) nBodies = atoi(argv[1]);
+ 
+-  const float dt = 0.01f; // time step
++  const double dt = 0.01; // time step
+   const int nIters = 10;  // simulation iterations
+ 
+-  int bytes = 2*nBodies*sizeof(float4);
+-  float *buf = (float*)malloc(bytes);
+-  BodySystem p = { (float4*)buf, ((float4*)buf) + nBodies };
++  int bytes = 2*nBodies*sizeof(double4);
++  double *buf = (double*)malloc(bytes);
++  double *buf_cpu = (double*)malloc(bytes);
++  BodySystem p = { (double4*)buf, ((double4*)buf) + nBodies };
++  BodySystem p_cpu = { (double4*)buf_cpu, ((double4*)buf_cpu) + nBodies };
+ 
+   randomizeBodies(buf, 8*nBodies); // Init pos / vel data
+ 
+-  float *d_buf;
++  for(int i=0;i<8*nBodies;i++)
++    buf_cpu[i] = buf[i];
++
++  double *d_buf;
+   hipMalloc(&d_buf, bytes);
+-  BodySystem d_p = { (float4*)d_buf, ((float4*)d_buf) + nBodies };
++  BodySystem d_p = { (double4*)d_buf, ((double4*)d_buf) + nBodies };
+ 
+   int nBlocks = (nBodies + BLOCK_SIZE - 1) / BLOCK_SIZE;
+   double totalTime = 0.0;
+@@ -72,6 +95,14 @@ int main(const int argc, const char** argv) {
+     hipLaunchKernelGGL(bodyForce, dim3(nBlocks), dim3(BLOCK_SIZE), 0, 0, d_p.pos, d_p.vel, dt, nBodies);
+     hipMemcpy(buf, d_buf, bytes, hipMemcpyDeviceToHost);
+ 
++    bodyForce_cpu(p_cpu.pos, p_cpu.vel, dt, nBodies); // compute interbody forces
++
++    for (int i = 0 ; i < nBodies; i++) { // integrate position
++      p_cpu.pos[i].x += p_cpu.vel[i].x*dt;
++      p_cpu.pos[i].y += p_cpu.vel[i].y*dt;
++      p_cpu.pos[i].z += p_cpu.vel[i].z*dt;
++    }
++
+     for (int i = 0 ; i < nBodies; i++) { // integrate position
+       p.pos[i].x += p.vel[i].x*dt;
+       p.pos[i].y += p.vel[i].y*dt;
+@@ -88,6 +119,16 @@ int main(const int argc, const char** argv) {
+   }
+   double avgTime = totalTime / (double)(nIters-1);
+ 
++  // verify
++  for(int i=0;i<8*nBodies;i++)
++    {
++      if(abs(buf_cpu[i] - buf[i]) > 1)
++	{
++	  printf( "Error! %lf %lf\n", buf_cpu[i], buf[i] );
++	  exit(1);
++	}
++    }
++
+ #ifdef SHMOO
+   printf("%d, %0.3f\n", nBodies, 1e-9 * nBodies * nBodies / avgTime);
+ #else
+diff --git a/mini-nbody/hip/nbody-orig.cpp b/mini-nbody/hip/nbody-orig.cpp
+index 0f93d95..bc8c4f3 100644
+--- a/mini-nbody/hip/nbody-orig.cpp
++++ b/mini-nbody/hip/nbody-orig.cpp
+@@ -5,34 +5,54 @@
+ #include "timer.h"
+ 
+ #define BLOCK_SIZE 256
+-#define SOFTENING 1e-9f
++#define SOFTENING 1e-9
+ 
+-typedef struct { float x, y, z, vx, vy, vz; } Body;
++typedef struct { double x, y, z, vx, vy, vz; } Body;
+ 
+-void randomizeBodies(float *data, int n) {
++void randomizeBodies(double *data, int n) {
+   for (int i = 0; i < n; i++) {
+-    data[i] = 2.0f * (rand() / (float)RAND_MAX) - 1.0f;
++    data[i] = 2.0 * (rand() / (double)RAND_MAX) - 1.0;
+   }
+ }
+ 
+-//inline float rsqrtf(float x){
+-    //return 1.0f / sqrtf(x);
++//inline double rsqrtf(double x){
++    //return 1.0 / sqrtf(x);
+ //}//host implementation of cuda function for rsqrtf
+ 
++void bodyForce_cpu(Body *p, double dt, int n) {
++  for (int i = 0; i < n; i++) { 
++    double Fx = 0.0; double Fy = 0.0; double Fz = 0.0;
++
++    for (int j = 0; j < n; j++) {
++      double dx = p[j].x - p[i].x;
++      double dy = p[j].y - p[i].y;
++      double dz = p[j].z - p[i].z;
++      double distSqr = dx*dx + dy*dy + dz*dz + SOFTENING;
++      double invDist = (double) 1.0 / (double)sqrt(distSqr);
++      double invDist3 = invDist * invDist * invDist;
++
++      Fx += dx * invDist3; Fy += dy * invDist3; Fz += dz * invDist3;
++    }
++
++    p[i].vx += dt*Fx; p[i].vy += dt*Fy; p[i].vz += dt*Fz;
++  }
++}
++
++
+ __global__
+-void bodyForce(Body *p, float dt, int n) {
++void bodyForce(Body *p, double dt, int n) {
+   int i = hipBlockDim_x * hipBlockIdx_x + hipThreadIdx_x;
+   if (i < n) {
+-    float Fx = 0.0f; float Fy = 0.0f; float Fz = 0.0f;
++    double Fx = 0.0; double Fy = 0.0; double Fz = 0.0;
+ 
+     for (int j = 0; j < n; j++) {
+-      float dx = p[j].x - p[i].x;
+-      float dy = p[j].y - p[i].y;
+-      float dz = p[j].z - p[i].z;
+-      float distSqr = dx*dx + dy*dy + dz*dz + SOFTENING;
+-      float invDist = 1.0f / sqrtf(distSqr);
+-      //float invDist = rsqrtf(distSqr);
+-      float invDist3 = invDist * invDist * invDist;
++      double dx = p[j].x - p[i].x;
++      double dy = p[j].y - p[i].y;
++      double dz = p[j].z - p[i].z;
++      double distSqr = dx*dx + dy*dy + dz*dz + SOFTENING;
++      double invDist = (double) 1.0 / (double)sqrt(distSqr);
++      //double invDist = rsqrtf(distSqr);
++      double invDist3 = invDist * invDist * invDist;
+ 
+       Fx += dx * invDist3; Fy += dy * invDist3; Fz += dz * invDist3;
+     }
+@@ -46,16 +66,22 @@ int main(const int argc, const char** argv) {
+   int nBodies = 30000;
+   if (argc > 1) nBodies = atoi(argv[1]);
+ 
+-  const float dt = 0.01f; // time step
++  const double dt = 0.01; // time step
+   const int nIters = 10;  // simulation iterations
+ 
+   int bytes = nBodies*sizeof(Body);
+-  float *buf = (float*)malloc(bytes);
++  double *buf = (double*)malloc(bytes);
++  double *buf_cpu = (double*)malloc(bytes);
+   Body *p = (Body*)buf;
++  Body *p_cpu = (Body*)buf_cpu;
+ 
+   randomizeBodies(buf, 6*nBodies); // Init pos / vel data
+ 
+-  float *d_buf;
++
++  for(int i=0;i<6*nBodies;i++)
++    buf_cpu[i] = buf[i];
++
++  double *d_buf;
+   hipMalloc(&d_buf, bytes);
+   Body *d_p = (Body*)d_buf;
+ 
+@@ -69,6 +95,15 @@ int main(const int argc, const char** argv) {
+     hipLaunchKernelGGL(bodyForce, dim3(nBlocks), dim3(BLOCK_SIZE), 0, 0, d_p, dt, nBodies); // compute interbody forces
+     hipMemcpy(buf, d_buf, bytes, hipMemcpyDeviceToHost);
+ 
++
++    bodyForce_cpu(p_cpu, dt, nBodies); // compute interbody forces
++
++    for (int i = 0 ; i < nBodies; i++) { // integrate position
++      p_cpu[i].x += p_cpu[i].vx*dt;
++      p_cpu[i].y += p_cpu[i].vy*dt;
++      p_cpu[i].z += p_cpu[i].vz*dt;
++    }
++
+     for (int i = 0 ; i < nBodies; i++) { // integrate position
+       p[i].x += p[i].vx*dt;
+       p[i].y += p[i].vy*dt;
+@@ -85,6 +120,17 @@ int main(const int argc, const char** argv) {
+   }
+   double avgTime = totalTime / (double)(nIters-1);
+ 
++  // verify
++  for(int i=0;i<6*nBodies;i++)
++    {
++      if(abs(buf_cpu[i] - buf[i]) > 1)
++	{
++	  printf( "Error! %lf %lf\n", buf_cpu[i], buf[i] );
++	  exit(1);
++	}
++    }
++
++
+ #ifdef SHMOO
+   printf("%d, %0.3f\n", nBodies, 1e-9 * nBodies * nBodies / avgTime);
+ #else
+diff --git a/mini-nbody/hip/nbody-soa.cpp b/mini-nbody/hip/nbody-soa.cpp
+index 77c30c1..27c518a 100644
+--- a/mini-nbody/hip/nbody-soa.cpp
++++ b/mini-nbody/hip/nbody-soa.cpp
+@@ -5,30 +5,48 @@
+ #include "timer.h"
+ 
+ #define BLOCK_SIZE 256
+-#define SOFTENING 1e-9f
++#define SOFTENING 1e-9
+ 
+-typedef struct { float4 *pos, *vel; } BodySystem;
++typedef struct { double4 *pos, *vel; } BodySystem;
+ 
+-void randomizeBodies(float *data, int n) {
++void randomizeBodies(double *data, int n) {
+   for (int i = 0; i < n; i++) {
+-    data[i] = 2.0f * (rand() / (float)RAND_MAX) - 1.0f;
++    data[i] = 2.0 * (rand() / (double)RAND_MAX) - 1.0;
++  }
++}
++
++void bodyForce_cpu(double4 *p, double4 *v, double dt, int n) {
++  for (int i = 0; i < n; i++) { 
++    double Fx = 0.0; double Fy = 0.0; double Fz = 0.0;
++
++    for (int j = 0; j < n; j++) {
++      double dx = p[j].x - p[i].x;
++      double dy = p[j].y - p[i].y;
++      double dz = p[j].z - p[i].z;
++      double distSqr = dx*dx + dy*dy + dz*dz + SOFTENING;
++      double invDist = (double) 1.0 / (double)sqrt(distSqr);
++      double invDist3 = invDist * invDist * invDist;
++
++      Fx += dx * invDist3; Fy += dy * invDist3; Fz += dz * invDist3;
++    }
++    v[i].x += dt*Fx; v[i].y += dt*Fy; v[i].z += dt*Fz;
+   }
+ }
+ 
+ __global__
+-void bodyForce(float4 *p, float4 *v, float dt, int n) {
++void bodyForce(double4 *p, double4 *v, double dt, int n) {
+   int i = hipBlockDim_x * hipBlockIdx_x + hipThreadIdx_x;
+   if (i < n) {
+-    float Fx = 0.0f; float Fy = 0.0f; float Fz = 0.0f;
++    double Fx = 0.0; double Fy = 0.0; double Fz = 0.0;
+ 
+     for (int j = 0; j < n; j++) {
+-      float dx = p[j].x - p[i].x;
+-      float dy = p[j].y - p[i].y;
+-      float dz = p[j].z - p[i].z;
+-      float distSqr = dx*dx + dy*dy + dz*dz + SOFTENING;
+-      /*float invDist = rsqrtf(distSqr);*/
+-      float invDist = 1.0f / sqrtf(distSqr);
+-      float invDist3 = invDist * invDist * invDist;
++      double dx = p[j].x - p[i].x;
++      double dy = p[j].y - p[i].y;
++      double dz = p[j].z - p[i].z;
++      double distSqr = dx*dx + dy*dy + dz*dz + SOFTENING;
++      double invDist = (double) 1.0 / (double)sqrt(distSqr);
++      /*double invDist = rsqrtf(distSqr);*/
++      double invDist3 = invDist * invDist * invDist;
+ 
+       Fx += dx * invDist3; Fy += dy * invDist3; Fz += dz * invDist3;
+     }
+@@ -42,18 +60,24 @@ int main(const int argc, const char** argv) {
+   int nBodies = 30000;
+   if (argc > 1) nBodies = atoi(argv[1]);
+ 
+-  const float dt = 0.01f; // time step
++  const double dt = 0.01; // time step
+   const int nIters = 10;  // simulation iterations
+ 
+-  int bytes = 2*nBodies*sizeof(float4);
+-  float *buf = (float*)malloc(bytes);
+-  BodySystem p = { (float4*)buf, ((float4*)buf) + nBodies };
++  int bytes = 2*nBodies*sizeof(double4);
++  double *buf = (double*)malloc(bytes);
++  double *buf_cpu = (double*)malloc(bytes);
++  BodySystem p = { (double4*)buf, ((double4*)buf) + nBodies };
++  BodySystem p_cpu = { (double4*)buf_cpu, ((double4*)buf_cpu) + nBodies };
+ 
+   randomizeBodies(buf, 8*nBodies); // Init pos / vel data
+ 
+-  float *d_buf;
++  for(int i=0;i<8*nBodies;i++)
++    buf_cpu[i] = buf[i];
++
++
++  double *d_buf;
+   hipMalloc(&d_buf, bytes);
+-  BodySystem d_p = { (float4*)d_buf, ((float4*)d_buf) + nBodies };
++  BodySystem d_p = { (double4*)d_buf, ((double4*)d_buf) + nBodies };
+ 
+   int nBlocks = (nBodies + BLOCK_SIZE - 1) / BLOCK_SIZE;
+   double totalTime = 0.0;
+@@ -65,6 +89,14 @@ int main(const int argc, const char** argv) {
+     hipLaunchKernelGGL(bodyForce, dim3(nBlocks), dim3(BLOCK_SIZE), 0, 0, d_p.pos, d_p.vel, dt, nBodies);
+     hipMemcpy(buf, d_buf, bytes, hipMemcpyDeviceToHost);
+ 
++    bodyForce_cpu(p_cpu.pos, p_cpu.vel, dt, nBodies); // compute interbody forces
++
++    for (int i = 0 ; i < nBodies; i++) { // integrate position
++      p_cpu.pos[i].x += p_cpu.vel[i].x*dt;
++      p_cpu.pos[i].y += p_cpu.vel[i].y*dt;
++      p_cpu.pos[i].z += p_cpu.vel[i].z*dt;
++    }
++
+     for (int i = 0 ; i < nBodies; i++) { // integrate position
+       p.pos[i].x += p.vel[i].x*dt;
+       p.pos[i].y += p.vel[i].y*dt;
+@@ -81,6 +113,17 @@ int main(const int argc, const char** argv) {
+   }
+   double avgTime = totalTime / (double)(nIters-1);
+ 
++  // verify
++  for(int i=0;i<8*nBodies;i++)
++    {
++      if(abs(buf_cpu[i] - buf[i]) > 1)
++	{
++	  printf( "Error! %lf %lf\n", buf_cpu[i], buf[i] );
++	  exit(1);
++	}
++    }
++
++
+ #ifdef SHMOO
+   printf("%d, %0.3f\n", nBodies, 1e-9 * nBodies * nBodies / avgTime);
+ #else
