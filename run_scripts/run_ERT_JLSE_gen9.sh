@@ -6,8 +6,8 @@ source timing_check.sh
 module load intel_compute_runtime
 module load hipcl
 
-cp ERT_configs/config.*-fp*.iris.jlse.anl.gov.01 cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0/Config
-cd cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0
+cp ../benchmarks/performance/ERT_configs/config.*-fp*.iris.jlse.anl.gov.01 ../benchmarks/performance/cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0/Config
+cd ../benchmarks/performance/cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0
 
 # HIP
 timing_check "python ./ert --verbose=3 Config/config.hip-fp64.iris.jlse.anl.gov.01" "$0"
