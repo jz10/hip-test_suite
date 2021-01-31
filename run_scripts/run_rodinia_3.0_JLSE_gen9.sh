@@ -18,12 +18,8 @@ sed -i s/"#define NUMBER_THREADS 512"/"#define NUMBER_THREADS 256"/ srad/srad_v1
 sed -i s/"#define NUMBER_THREADS 512"/"#define NUMBER_THREADS 256"/ srad/cusrc/srad_v1/define.c
 sed -i s/"#define MAXBLOCKSIZE 512"/"#define MAXBLOCKSIZE 256"/ gaussian/gaussian.cu
 sed -i s/"#include \"common.h\""/"#include \"common.h\"\n#include <string.h>"/ dwt2d/dwt.cu
+sed -s s/"./b+"/"timeout -k 9 60 ./b+"/ ../test/b+tree/run0.cmd
 
+timing_check 'make test HIPCC="clang++ -std=c++11" OMPCC=gcc HIPLD="clang++-link -std=c++11 -lOpenCL -lhipcl"' "$0"
 
-timing_check 'make test HIPCC="clang++ -std=c++11" HIPLD="clang++-link -std=c++11 -lOpenCL -lhipcl"' "$0"
-
-sed -i s/"#define THREADS_PER_BLOCK 256"/"#define THREADS_PER_BLOCK 512"/ streamcluster/streamcluster_hip.cu
-sed -i s/"#define NUMBER_THREADS 256"/"#define NUMBER_THREADS 512"/ srad/srad_v1/define.c
-sed -i s/"#define NUMBER_THREADS 256"/"#define NUMBER_THREADS 512"/ srad/cusrc/srad_v1/define.c
-sed -i s/"#define MAXBLOCKSIZE 256"/"#define MAXBLOCKSIZE 512"/ gaussian/gaussian.cu
-sed -i s/"\n#include <string.h>"// dwt2d/dwt.cu
+git reset --hard
