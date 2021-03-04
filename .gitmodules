@@ -31,3 +31,6 @@
 [submodule "proxies/BerkeleyGW-Kernels-CPP"]
 	path = proxies/BerkeleyGW-Kernels-CPP
 	url = https://gitlab.com/NERSC/nersc-proxies/BerkeleyGW-Kernels-CPP.git
+[submodule "proxies/adept-proxy"]
+	path = proxies/adept-proxy
+	url = https://github.com/mgawan/adept-proxy.git
