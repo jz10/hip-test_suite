@@ -34,3 +34,6 @@
 [submodule "proxies/adept-proxy"]
 	path = proxies/adept-proxy
 	url = https://github.com/mgawan/adept-proxy.git
+[submodule "benchmarks/conformance/HIP"]
+	path = benchmarks/conformance/HIP
+	url = https://github.com/ROCm-Developer-Tools/HIP.git
