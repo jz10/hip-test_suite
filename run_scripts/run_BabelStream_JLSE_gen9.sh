@@ -8,7 +8,7 @@ module load hipcl
 
 cd ../benchmarks/performance/BabelStream
 
-rm ./hip-stream
+rm -f ./hip-stream
 # HIPCL
 sed s/"#define TBSIZE 1024"/"#define TBSIZE 256"/ HIPStream.cpp > HIPStream_gen9.cpp
 sed -i s/"#define DOT_NUM_BLOCKS 256"/"#define DOT_NUM_BLOCKS 32"/ HIPStream_gen9.cpp
@@ -21,6 +21,9 @@ clang++ -O3 -std=c++11 -DHIP main.cpp HIPStream_gen9.cpp  -lhipcl -lOpenCL -o hi
 # = 65536000
 timing_check "./hip-stream -s 65536000" "$0"
 
+rm -f hip-stream
+
+git reset --hard
 # opencl
 #module purge
 #module load intel_compute_runtime

@@ -1,0 +1,65 @@
+diff --git a/rodinia_3.0/hip/dwt2d/dwt.cu b/rodinia_3.0/hip/dwt2d/dwt.cu
+index 10ae18d..43d4d23 100644
+--- a/rodinia_3.0/hip/dwt2d/dwt.cu
++++ b/rodinia_3.0/hip/dwt2d/dwt.cu
+@@ -36,6 +36,7 @@
+ #include "dwt_cuda/common.h"
+ #include "dwt.h"
+ #include "common.h"
++#include <string.h>
+ 
+ inline void fdwt(float *in, float *out, int width, int height, int levels)
+ {
+diff --git a/rodinia_3.0/hip/gaussian/gaussian.cu b/rodinia_3.0/hip/gaussian/gaussian.cu
+index c00e14d..f03e05f 100644
+--- a/rodinia_3.0/hip/gaussian/gaussian.cu
++++ b/rodinia_3.0/hip/gaussian/gaussian.cu
+@@ -31,7 +31,7 @@
+ #elif defined(RD_WG_SIZE)
+         #define MAXBLOCKSIZE RD_WG_SIZE
+ #else
+-        #define MAXBLOCKSIZE 512
++        #define MAXBLOCKSIZE 256
+ #endif
+ 
+ //2D defines. Go from specific to general                                                
+diff --git a/rodinia_3.0/hip/srad/cusrc/srad_v1/define.c b/rodinia_3.0/hip/srad/cusrc/srad_v1/define.c
+index 7e2dd77..521d03b 100755
+--- a/rodinia_3.0/hip/srad/cusrc/srad_v1/define.c
++++ b/rodinia_3.0/hip/srad/cusrc/srad_v1/define.c
+@@ -6,4 +6,4 @@
+ 
+ #define fp float
+ 
+-#define NUMBER_THREADS 512
++#define NUMBER_THREADS 256
+diff --git a/rodinia_3.0/hip/srad/srad_v1/define.c b/rodinia_3.0/hip/srad/srad_v1/define.c
+index 7e2dd77..521d03b 100644
+--- a/rodinia_3.0/hip/srad/srad_v1/define.c
++++ b/rodinia_3.0/hip/srad/srad_v1/define.c
+@@ -6,4 +6,4 @@
+ 
+ #define fp float
+ 
+-#define NUMBER_THREADS 512
++#define NUMBER_THREADS 256
+diff --git a/rodinia_3.0/hip/streamcluster/streamcluster_hip.cu b/rodinia_3.0/hip/streamcluster/streamcluster_hip.cu
+index 9f848e6..fd49d90 100644
+--- a/rodinia_3.0/hip/streamcluster/streamcluster_hip.cu
++++ b/rodinia_3.0/hip/streamcluster/streamcluster_hip.cu
+@@ -36,7 +36,7 @@ using namespace std;
+    } } while (0)
+    */
+ 
+-#define THREADS_PER_BLOCK 512
++#define THREADS_PER_BLOCK 256
+ #define MAXBLOCKS 65536
+ //#define CUDATIME
+ 
+diff --git a/rodinia_3.0/test/b+tree/run0.cmd b/rodinia_3.0/test/b+tree/run0.cmd
+index 3acb398..bfcf772 100755
+--- a/rodinia_3.0/test/b+tree/run0.cmd
++++ b/rodinia_3.0/test/b+tree/run0.cmd
+@@ -1 +1 @@
+-./b+tree file ../../data/b+tree/mil.txt command ../../data/b+tree/command.txt
++timeout -k 9 60 ./b+tree file ../../data/b+tree/mil.txt command ../../data/b+tree/command.txt
