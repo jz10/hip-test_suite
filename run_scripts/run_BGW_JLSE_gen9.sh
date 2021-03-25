@@ -21,7 +21,7 @@ clang++ -O3 -std=c++11   -c -o ff.o ff.cpp
 clang++-link ff.o -o ff.ex   -lhipcl -lOpenCL
 
 timing_check "./ff.ex" "$0"
-
+rm -f ./ff.ex ./ff.o
 
 cd ../GPP
 
@@ -33,3 +33,8 @@ clang++-link gpp.o -o gpp.ex   -lhipcl -lOpenCL
 
 
 timing_check "./gpp.ex " "$0"
+rm -f ./gpp.ex ./gpp.o
+
+cd ..
+
+git reset --hard

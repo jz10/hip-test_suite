@@ -8,11 +8,11 @@ module load hipcl
 
 cd ../HIP-Examples/rodinia_3.0/hip
 
-make clean -j 4
-
 git reset --hard
 # fix some things 
 git apply ../../../run_scripts/patches/rodinia_patch 
+
+make clean
 
 timing_check 'make test HIPCC="clang++ -std=c++11" OMPCC=gcc HIPLD="clang++-link -std=c++11 -lOpenCL -lhipcl"' "$0"
 
