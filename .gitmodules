@@ -37,3 +37,6 @@
 [submodule "benchmarks/conformance/HIP"]
 	path = benchmarks/conformance/HIP
 	url = https://github.com/ROCm-Developer-Tools/HIP.git
+[submodule "frameworks/occa"]
+	path = frameworks/occa
+	url = https://github.com/argonne-lcf/occa.git
