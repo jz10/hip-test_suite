@@ -15,19 +15,20 @@ The directory structure looks like:
 │   ├── cholla
 ├── benchmarks
 │   ├── conformance
-│   └── performance
-│       ├── BabelStream
-│       ├── cs-roofline-toolkit
-│       └── rocHPCG
+│   │   └── HIP
+│   └── performance
+│       ├── BabelStream
+│       ├── ERT_configs
+│       ├── cs-roofline-toolkit
 ├── frameworks
-│   ├── RAJA
-│   ├── kokkos
+│   ├── RAJA
+│   ├── kokkos
+│   ├── occa
 ├── proxies
-│   ├── BerkeleyGW-Kernels-CPP(2)
-│   ├── KokkosDslash
-│   ├── adept-proxy
-│   ├── miniWeather
-│   └── su3_bench
+│   ├── BerkeleyGW-Kernels-CPP
+│   ├── KokkosDslash
+│   ├── adept-proxy
+│   └── su3_bench
 ```
 
 Since we use submodules, to clone all the submodules, you'll need to use 
