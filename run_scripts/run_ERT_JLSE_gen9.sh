@@ -3,8 +3,8 @@
 # get the definition of timing_check
 source timing_check.sh
 
-module load intel_compute_runtime
-module load hipcl
+
+
 
 cp ../benchmarks/performance/ERT_configs/config.*-fp*.iris.jlse.anl.gov.01 ../benchmarks/performance/cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0/Config
 cd ../benchmarks/performance/cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0
@@ -20,7 +20,7 @@ grep -A 1 "DRAM" Results.hip.iris.fp32.01/Run.001/roofline.json
 
 # OCL
 #module purge
-#module load intel_compute_runtime
+#
 
 
 #python ./ert --verbose=3 Config/config.ocl-fp64.iris.jlse.anl.gov.01 
