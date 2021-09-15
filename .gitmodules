@@ -34,3 +34,6 @@
 [submodule "frameworks/occa"]
 	path = frameworks/occa
 	url = https://github.com/argonne-lcf/occa.git
+[submodule "proxies/GridMini"]
+	path = proxies/GridMini
+	url = https://github.com/meifeng/GridMini.git
