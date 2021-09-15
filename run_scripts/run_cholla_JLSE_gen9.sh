@@ -5,8 +5,8 @@ source timing_check.sh
 
 #module load openmpi/2.1.6-gcc
 module load mpi
-module load intel_compute_runtime
-module load hipcl
+
+
 #module list
 #export LIBRARY_PATH=$LIBRARY_PATH:/home/bertoni/opt/hdf5/lib/
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/bertoni/opt/hdf5/lib/
@@ -34,12 +34,12 @@ sed -i s^"LIBS += -L\$(ROCM_PATH)/lib -lamdhip64"^"LIBS += -L\$(ROCM_PATH)/lib -
 sed -i s^"-Wall --amdgpu-target=gfx906,gfx908 -std=c++14"^"-Wall -std=c++14"^ Makefile
 sed -i s^"EXEC := cholla\$(SUFFIX)"^"EXEC := bin/cholla\$(SUFFIX)"^ Makefile
 
-sed -i s^"echo \"unknown\""^"if [[ \$FQDN == *\"iris\"* ]]; then\necho \"JLSE-iris\"\nexit 0\nfi\necho \"unknown\""^ builds/machine.sh
+sed -i s^"echo \"unknown\""^"if [[ \$FQDN == *\"iris\"* ]] then\necho \"JLSE-iris\"\nexit 0\nfi\necho \"unknown\""^ builds/machine.sh
 
 make clean
 make
 
-if [ "$?" -eq "0" ];
+if [ "$?" -eq "0" ]
 then
     rm -rf test
     mkdir test

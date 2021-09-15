@@ -1,0 +1,28 @@
+diff --git a/adept-hip/Makefile b/adept-hip/Makefile
+index be04410..4690bec 100644
+--- a/adept-hip/Makefile
++++ b/adept-hip/Makefile
+@@ -7,17 +7,17 @@ else
+ endif
+ 
+ program_gpu: $(objects)
+-	hipcc -std=c++11 $(NVCCFLAGS) $(objects) -o program_gpu
++	clang++-link -std=c++11 $(NVCCFLAGS) $(objects) -o program_gpu -lOpenCl -lhipcl
+ main.o: main.cpp driver.hpp
+-	hipcc -std=c++11 $(NVCCFLAGS) -I. -c main.cpp -o $@
++	clang++ -std=c++11 $(NVCCFLAGS) -I. -c main.cpp -o $@
+ driver.o: driver.cpp driver.hpp utils.hpp alignments.hpp
+-	hipcc -std=c++11 $(NVCCFLAGS) -I. -c driver.cpp -o $@
++	clang++ -std=c++11 $(NVCCFLAGS) -I. -c driver.cpp -o $@
+ kernel.o: kernel.cpp kernel.hpp
+-	hipcc -std=c++11 $(NVCCFLAGS) -I. -c kernel.cpp -o $@
++	clang++ -std=c++11 $(NVCCFLAGS) -I. -c kernel.cpp -o $@
+ utils.o: utils.cpp utils.hpp
+-	hipcc -std=c++11 $(NVCCFLAGS) -I. -c utils.cpp -o $@
++	clang++ -std=c++11 $(NVCCFLAGS) -I. -c utils.cpp -o $@
+ alignments.o: alignments.cpp alignments.hpp utils.hpp
+-	hipcc -std=c++11 $(NVCCFLAGS) -I. -c alignments.cpp -o $@
++	clang++ -std=c++11 $(NVCCFLAGS) -I. -c alignments.cpp -o $@
+ clean:
+ 	rm *.o program_gpu
+ 	echo "all object and executables deleted"

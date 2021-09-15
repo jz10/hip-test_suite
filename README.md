@@ -14,17 +14,20 @@ The directory structure looks like:
 ├── applications
 │   ├── cholla
 ├── benchmarks
+│   ├── conformance
+│   │   └── HIP
 │   └── performance
 │       ├── BabelStream
+│       ├── ERT_configs
 │       ├── cs-roofline-toolkit
-│       ├── rocHPCG
 ├── frameworks
 │   ├── RAJA
 │   ├── kokkos
+│   ├── occa
 ├── proxies
 │   ├── BerkeleyGW-Kernels-CPP
 │   ├── KokkosDslash
-│   ├── miniWeather
+│   ├── adept-proxy
 │   └── su3_bench
 ```
 
