@@ -37,3 +37,6 @@
 [submodule "proxies/GridMini"]
 	path = proxies/GridMini
 	url = https://github.com/meifeng/GridMini.git
+[submodule "proxies/RSBench"]
+	path = proxies/RSBench
+	url = https://github.com/ANL-CESAR/RSBench.git

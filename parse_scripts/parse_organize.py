@@ -157,13 +157,14 @@ for i in list_of_hip:
 
 total_list = { i : 0 for i in list_of_hip }
 
-input_list={ "BabelStream" : "output_BabelStream",
+input_list={
+"BabelStream" : "output_BabelStream",
 "cs-roofline-toolkit" : "output_cs-roofline-toolkit",
-"rocHPCG" : "output_rocHPCG",
 "cholla" : "output_cholla",
 "KokkosDslash" : "output_KokkosDslash",
-"miniWeather" : "output_miniWeather",
 "su3_bench" : "output_su3_bench",
+"adept-proxy" : "output_adept-proxy",
+"BerkeleyGW-Kernels-CPP" : "output_BerkeleyGW-Kernels-CPP",
 "add4" : "output_add4",
 "cuda-stream" : "output_cuda-stream",
 "gpu-burn" : "output_gpu-burn",
@@ -186,8 +187,10 @@ input_list={ "BabelStream" : "output_BabelStream",
 "RecursiveGaussian" : "output_RecursiveGaussian",
 "SimpleConvolution" : "output_SimpleConvolution",
 "dct" : "output_dct",
-"dwtHaar1D" : "output_dwtHaar1D"
-}
+"dwtHaar1D" : "output_dwtHaar1D",
+"kokkos" : "output_kokkos",
+"RAJA" : "output_RAJA",
+"occa" : "output_occa"}
 
 list_of_apps = {}
 for app in input_list.keys():

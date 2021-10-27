@@ -142,11 +142,11 @@ hipSetupArgument )
 
 directories=( "benchmarks/performance/BabelStream"
 "benchmarks/performance/cs-roofline-toolkit"
-"benchmarks/performance/rocHPCG"
 "applications/cholla"
 "proxies/KokkosDslash"
-"proxies/miniWeather"
 "proxies/su3_bench"
+"proxies/adept-proxy"
+"proxies/BerkeleyGW-Kernels-CPP"
 "HIP-Examples/add4"
 "HIP-Examples/cuda-stream"
 "HIP-Examples/gpu-burn"
@@ -170,7 +170,10 @@ directories=( "benchmarks/performance/BabelStream"
 "HIP-Examples/HIP-Examples-Applications/SimpleConvolution"
 "HIP-Examples/HIP-Examples-Applications/dct"
 "HIP-Examples/HIP-Examples-Applications/dwtHaar1D"
-)
+"frameworks/kokkos"
+"frameworks/RAJA"
+"frameworks/occa"
+	    )
 
 for d in ${directories[@]} 
 do
