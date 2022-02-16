@@ -10,5 +10,5 @@ cd ../HIP-Examples/
 
 cd strided-access
 clang++ -std=c++11 -O3 -c benchmark-hip.cpp
-clang++-link -std=c++11 -O3 -o strided-access benchmark-hip.o  -lOpenCL -lhipcl
+clang++-link -std=c++11 -O3 -o strided-access benchmark-hip.o  $CXXFLAGS
 timing_check "./strided-access" "$0"

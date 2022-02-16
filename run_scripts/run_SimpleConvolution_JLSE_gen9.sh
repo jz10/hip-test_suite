@@ -7,5 +7,5 @@ source timing_check.sh
 
 
 cd ../HIP-Examples/HIP-Examples-Applications/SimpleConvolution/
-clang++ --std c++14 -g -o SimpleConvolution SimpleConvolution.cpp -lhipcl -lOpenCL
+clang++ --std c++14 -g -o SimpleConvolution SimpleConvolution.cpp $CXXFLAGS
 timing_check "./SimpleConvolution --quiet --verify" "$0"

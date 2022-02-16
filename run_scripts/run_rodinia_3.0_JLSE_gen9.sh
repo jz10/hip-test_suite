@@ -1,20 +1,7 @@
 #!/bin/bash
 
 # get the definition of timing_check
-#source timing_check.sh
-
-function timing_check() {
-    { time $1  } 2> out
-    cat out
-    runtime=$(grep 'real' out | grep "s$" | awk '{print $2}')
-    echo "runtime for \"$1\" is" $runtime
-    rm out
-}
-
-
-
-
-
+source timing_check.sh
 cd ../HIP-Examples/rodinia_3.0/hip
 
 git reset --hard
@@ -25,7 +12,7 @@ make clean
 export HIPCC=clang++
 export HIPCC_FLAGS=-std=c++11
 export OMPCC=gcc
-export HIPLD="clang++-link -std=c++11 -lOpenCL -lhipcl"
-timing_check 'make test HIPCC=clang++ HIPCC_FLAGS="-std=c++11 -I ../../common/" OMPCC=gcc HIPLD="clang++-link -std=c++11 -lOpenCL -lhipcl"' "$0"
+export HIPLD="clang++-link -std=c++11 $CXXFLAGS"
+make test HIPCC=clang++ HIPCC_FLAGS="-std=c++11 -I ../../common/" OMPCC=gcc HIPLD="clang++-link -std=c++11 $CXXFLAGS"
 
 git reset --hard

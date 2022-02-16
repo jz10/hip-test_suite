@@ -11,5 +11,5 @@ cd ../HIP-Examples/GPU-STREAM
 cmake .
 clang++ --std c++14 -g -c -o main.o main.cpp -DIMPLEMENTATION_STRING=\"HIP\"
 clang++ --std c++14 -g -c -o HIPStream.o HIPStream.cu
-clang++-link -o HIPStream main.o HIPStream.o -lhipcl -lOpenCL
+clang++-link -o HIPStream main.o HIPStream.o $CXXFLAGS
 ./HIPStream -s 65536000

@@ -15,7 +15,7 @@ clang++ -O3 -std=c++11 -c -o gpuburn.o gpuburn.cpp
 clang++ -O3 -std=c++11 -c -o common.o common.cpp  
 clang++ -O3 -std=c++11 -c -o BurnKernel.o BurnKernel.cpp  
 clang++ -O3 -std=c++11 -c -o AmdGpuMonitor.o AmdGpuMonitor.cpp  
-clang++-link -lm -lpthread -o gpuburn-hip gpuburn.o common.o BurnKernel.o AmdGpuMonitor.o   -lOpenCL -lhipcl
+clang++-link -lm -lpthread -o gpuburn-hip gpuburn.o common.o BurnKernel.o AmdGpuMonitor.o   $CXXFLAGS
 # reverting
 timing_check "./gpuburn-hip -t 5" "$0"
 

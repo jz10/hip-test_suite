@@ -30,7 +30,7 @@ export OMP_NUM_THREADS=16
 export SUFFIX='.hydro-amd-ompi'
 export TYPE=hydro
 
-sed -i s^"LIBS += -L\$(ROCM_PATH)/lib -lamdhip64"^"LIBS += -L\$(ROCM_PATH)/lib -lamdhip64\nGPUCXX := clang++\nCXXFLAGS += -std=c++14\nLD := clang++-link\nLDFLAGS := \$(CXXFLAGS) -lOpenCL -lhipcl"^ Makefile
+sed -i s^"LIBS += -L\$(ROCM_PATH)/lib -lamdhip64"^"LIBS += -L\$(ROCM_PATH)/lib -lamdhip64\nGPUCXX := clang++\nCXXFLAGS += -std=c++14\nLD := clang++-link\nLDFLAGS := \$(CXXFLAGS) $CXXFLAGS"^ Makefile
 sed -i s^"-Wall --amdgpu-target=gfx906,gfx908 -std=c++14"^"-Wall -std=c++14"^ Makefile
 sed -i s^"EXEC := cholla\$(SUFFIX)"^"EXEC := bin/cholla\$(SUFFIX)"^ Makefile
 

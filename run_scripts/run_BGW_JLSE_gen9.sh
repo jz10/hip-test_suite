@@ -18,7 +18,7 @@ echo " #### Running FF"
 rm -f ./ff.ex ./ff.o
 
 clang++ -O3 -std=c++11   -c -o ff.o ff.cpp
-clang++-link ff.o -o ff.ex   -lhipcl -lOpenCL
+clang++-link ff.o -o ff.ex   $CXXFLAGS
 
 timing_check "./ff.ex" "$0"
 rm -f ./ff.ex ./ff.o
@@ -29,7 +29,7 @@ echo " #### Running GPP"
 rm -f ./gpp.ex ./gpp.o
 
 clang++ -O3 -std=c++11   -c -o gpp.o gpp.cpp
-clang++-link gpp.o -o gpp.ex   -lhipcl -lOpenCL
+clang++-link gpp.o -o gpp.ex   $CXXFLAGS
 
 
 timing_check "./gpp.ex " "$0"

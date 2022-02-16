@@ -7,5 +7,5 @@ source timing_check.sh
 
 
 cd ../HIP-Examples/HIP-Examples-Applications/FloydWarshall/
-clang++ --std c++14 -g -o FloydWarshall FloydWarshall.cpp -lhipcl -lOpenCL
+clang++ --std c++14 -g -o FloydWarshall FloydWarshall.cpp $CXXFLAGS
 timing_check "./FloydWarshall --quiet --verify" "$0"

@@ -3,10 +3,17 @@
 # in case you forget like me :)
 git submodule update --init --recursive
 
-#module load intel_compute_runtime
-#module load hipcl/experimental-13
+module purge
+module load intel_compute_runtime/release/22.02.22151 cmake hiplz/HIAI05-10
+export HIPCL_DIR=$HIPLZ_DIR
+export CXXFLAGS="-lhiplz -lze_loader"
 
-for test_script in $(find . -name run_ERT*JLSE_gen9*)
+#module load intel_compute_runtime/release/22.02.22151 cmake hipcl/20210907-experimental13-debug
+#export CXXFLAGS="-lhipcl -lOpenCL"
+
+
+
+for test_script in $(find . -name run_*JLSE_gen9*)
 do
     echo "### Running ${test_script} ###"
     script_name=$(basename ${test_script})

@@ -7,5 +7,5 @@ source timing_check.sh
 
 
 cd ../HIP-Examples/HIP-Examples-Applications/dct/
-clang++ --std c++14 -g -o dct dct.cpp -lhipcl -lOpenCL
+clang++ --std c++14 -g -o dct dct.cpp $CXXFLAGS
 timing_check "./dct --quiet --verify" "$0"
