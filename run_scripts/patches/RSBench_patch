@@ -1,0 +1,28 @@
+diff --git a/hip/Makefile b/hip/Makefile
+index 645e3b0..aed847e 100644
+--- a/hip/Makefile
++++ b/hip/Makefile
+@@ -32,12 +32,12 @@ CFLAGS :=
+ 
+ # AMD
+ ifeq ($(COMPILER),amd)
+-  CC = hipcc
++  CC = clang++
+   CFLAGS += -std=c++14
+ endif
+ 
+ # Linker Flags
+-LDFLAGS = -lm
++LDFLAGS = -lm ${CXXFLAGS}
+ 
+ # Debug Flags
+ ifeq ($(DEBUG),yes)
+@@ -61,7 +61,7 @@ endif
+ #===============================================================================
+ 
+ $(program): $(obj) rsbench.h Makefile
+-	$(CC) $(CFLAGS) $(obj) -o $@ $(LDFLAGS)
++	clang++-link $(CFLAGS) $(obj) -o $@ $(LDFLAGS)
+ 
+ %.o: %.hip rsbench.h Makefile
+ 	$(CC) $(CFLAGS) -c $< -o $@

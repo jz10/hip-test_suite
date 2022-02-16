@@ -1,0 +1,44 @@
+diff --git a/Makefile b/Makefile
+index 0141502..e9a00c6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -51,6 +51,10 @@ MAIN=Benchmark_su3
+ CXX=hipcc
+ CXXFLAGS= -I. -std=c++14 --amdgpu-target=gfx906
+ 
++## HIPLZ
++CXX=clang++
++CXXFLAGS= -I. -std=c++14 ${CXXFLAGS}
++
+ ##HIPCC for NVIDIA 
+ #CXX=hipcc
+ #CXXFLAGS=-D__HIP_PLATFORM_NVIDIA -arch=sm_70 -I. -std=c++14
+diff --git a/benchmarks/Benchmark_su3.cc b/benchmarks/Benchmark_su3.cc
+index 8f6cf32..7862dbe 100644
+--- a/benchmarks/Benchmark_su3.cc
++++ b/benchmarks/Benchmark_su3.cc
+@@ -28,7 +28,7 @@ Author: Peter Boyle <peterboyle@Peters-MacBook-Pro-2.local>
+     /*  END LEGAL */
+ #include <Grid/GridCore.h>
+ #include <Grid/GridStd.h>
+-#include <cuda_profiler_api.h>
++//#include <cuda_profiler_api.h>
+ using namespace std;
+ using namespace Grid;
+ 
+@@ -165,13 +165,13 @@ int64_t Nloop=1000;
+       }
+ 
+ 
+-      cudaProfilerStart();
++      //      cudaProfilerStart();
+       double start=usecond();
+       for(int64_t i=0;i<Nloop;i++){
+ 	z=x*y;
+       }
+       double stop=usecond();
+-      cudaProfilerStop();
++      //      cudaProfilerStop();
+       double time = (stop-start)/Nloop*1000.0;
+       
+       double bytes=3*vol*Nc*Nc*sizeof(Complex);
