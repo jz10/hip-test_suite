@@ -5,6 +5,7 @@ source timing_check.sh
 
 cd ../HIP-Examples/mixbench
 ln -fs $HIPCL_DIR/include/hip/hip_runtime.h hip_runtime_api.h
+make clean
 clang++ --std c++14 -I $HIPCL_DIR/include/hip -I ./ -g -c -o main-hip.o main-hip.cpp
 clang++ --std c++14 -I $HIPCL_DIR/include/hip -I ./ -g -c -o mix_kernels_hip.o mix_kernels_hip.cpp
 clang++ --std c++14 -I $HIPCL_DIR/include/hip -I ./ -g -c -o main-hip-ro.o main-hip-ro.cpp

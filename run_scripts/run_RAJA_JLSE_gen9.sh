@@ -19,7 +19,7 @@ mkdir build
 cd build
 
 # error on cmake
-CC=clang CXX=/home/bertoni/clang_wrap++ cmake -DENABLE_OPENMP=Off -DENABLE_HIP=On ../.
+CMAKE_PREFIX_PATH=${HIPLZ_DIR}/cmake CC=clang CXX=/home/bertoni/clang_wrap++ cmake -DENABLE_OPENMP=Off -DENABLE_HIP=On ../.
 
 make
 

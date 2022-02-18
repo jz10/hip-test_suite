@@ -4,7 +4,7 @@
 git submodule update --init --recursive
 
 module purge
-module load intel_compute_runtime/release/22.02.22151 cmake hiplz/HIAI05-10
+module load intel_compute_runtime/release/22.02.22151 cmake hiplz/20220216-experimental13-debug
 export HIPCL_DIR=$HIPLZ_DIR
 export CXXFLAGS="-lhiplz -lze_loader"
 
@@ -13,7 +13,7 @@ export CXXFLAGS="-lhiplz -lze_loader"
 
 
 
-for test_script in $(find . -name run_*JLSE_gen9*)
+for test_script in $(find . -name run_rodin*_JLSE_gen9*)
 do
     echo "### Running ${test_script} ###"
     script_name=$(basename ${test_script})
