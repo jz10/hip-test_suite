@@ -7,5 +7,5 @@ source timing_check.sh
 
 
 cd ../HIP-Examples/HIP-Examples-Applications/Histogram/
-clang++ --std c++14 -g -o Histogram Histogram.cpp -lhipcl -lOpenCL
+clang++ --std c++14 -g -o Histogram Histogram.cpp $CXXFLAGS
 timing_check "./Histogram --quiet --verify" "$0"

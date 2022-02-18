@@ -7,5 +7,5 @@ source timing_check.sh
 
 
 cd ../HIP-Examples/HIP-Examples-Applications/BinomialOption/
-clang++ --std=c++14 -g -o BinomialOption BinomialOption.cpp -lhipcl -lOpenCL
+clang++ --std=c++14 -g -o BinomialOption BinomialOption.cpp $CXXFLAGS
 timing_check "./BinomialOption --quiet --verify" "$0"

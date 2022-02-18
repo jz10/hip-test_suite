@@ -7,7 +7,7 @@ index be04410..4690bec 100644
  
  program_gpu: $(objects)
 -	hipcc -std=c++11 $(NVCCFLAGS) $(objects) -o program_gpu
-+	clang++-link -std=c++11 $(NVCCFLAGS) $(objects) -o program_gpu -lOpenCl -lhipcl
++	clang++-link -std=c++11 $(NVCCFLAGS) $(objects) -o program_gpu $CXXFLAGS
  main.o: main.cpp driver.hpp
 -	hipcc -std=c++11 $(NVCCFLAGS) -I. -c main.cpp -o $@
 +	clang++ -std=c++11 $(NVCCFLAGS) -I. -c main.cpp -o $@

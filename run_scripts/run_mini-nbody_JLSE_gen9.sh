@@ -13,7 +13,7 @@ git reset --hard
 git apply ../../../run_scripts/patches/mini-nbody_patch
 
 ## orig
-clang++  -std=c++11 -I../ -DSHMOO nbody-orig.cpp -o nbody-orig -lOpenCL -lhipcl
+clang++  -std=c++11 -I../ -DSHMOO nbody-orig.cpp -o nbody-orig $CXXFLAGS
 
 EXE=nbody-orig
 K=1024
@@ -25,7 +25,7 @@ do
 done
 
 ## soa
-clang++  -std=c++11 -I../ -DSHMOO nbody-soa.cpp -o nbody-soa -lOpenCL -lhipcl
+clang++  -std=c++11 -I../ -DSHMOO nbody-soa.cpp -o nbody-soa $CXXFLAGS
 
 EXE=nbody-soa
 K=1024
@@ -37,7 +37,7 @@ do
 done
 
 ## block
-clang++ -std=c++11 -I../ -DSHMOO nbody-block.cpp -o nbody-block -lOpenCL -lhipcl
+clang++ -std=c++11 -I../ -DSHMOO nbody-block.cpp -o nbody-block $CXXFLAGS
 
 EXE=nbody-block
 K=1024
